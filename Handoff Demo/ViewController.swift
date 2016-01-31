@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textField: UITextField!
+    var messageText: NSString! = ""
     
     // MARK: Lifecycle methods
     override func viewDidAppear(animated: Bool) {
@@ -23,7 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         let activity = NSUserActivity(activityType: "sa.Handoff-Demo.text")
-        activity.title = "Note"
+        activity.title = "Message"
         activity.userInfo = ["text": ""]
         userActivity = activity
         userActivity?.becomeCurrent()
@@ -35,7 +36,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: User activity methods
     override func updateUserActivityState(activity: NSUserActivity) {
-        activity.addUserInfoEntriesFromDictionary(["text": textField.text!])
+        activity.addUserInfoEntriesFromDictionary(["text": messageText])
         super.updateUserActivityState(activity)
     }
     
@@ -45,6 +46,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: UITextFieldDelegate methods
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        messageText = (textField.text as NSString!).stringByReplacingCharactersInRange(range, withString: string)
         self.updateUserActivityState(userActivity!)
         return true
     }
